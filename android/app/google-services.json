@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "855282251591",
+    "project_id": "eduventure-flutter",
+    "storage_bucket": "eduventure-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:855282251591:android:80279c77ccc8862eec3e62",
+        "android_client_info": {
+          "package_name": "com.example.eduventure"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "855282251591-vbrufedr53vg7a0jjt7ua2e7shemv0jf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs-jpbx6mqcSHvWWMesNnjssCCEmZvZ_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "855282251591-vbrufedr53vg7a0jjt7ua2e7shemv0jf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

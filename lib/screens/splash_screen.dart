@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:eduventure/animations/fade_animation.dart';
 import 'package:eduventure/screens/home_page.dart';
 import 'package:eduventure/screens/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -14,15 +15,36 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  var auth = FirebaseAuth.instance;
+  bool _isLogined = false;
+
+  checkIsLoggedIn() async {
+    auth.authStateChanges().listen((User? user) {
+      if (user != null && mounted) {
+        setState(() {
+          Timer(Duration(seconds: 3), () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>HomeScreen()));
+          });
+        });
+      }else{
+        Timer(Duration(seconds: 3), () {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>LoginScreen()));
+        });
+      }
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    Timer(Duration(seconds: 4), () {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginScreen()));
-    });
+    checkIsLoggedIn();
   }
 
   @override
@@ -36,19 +58,22 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-              FadeAnimation(
-              1.1,Container(
-                    width: 280,
-                    height: 280,
-                    child: Lottie.asset(
-                      "assets/raw/splash.json",
-                      frameRate: FrameRate.max,
-                    ))),
-            FadeAnimation(
-              1.3,Text(
-                  "Eduventure",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
-                ))
+                FadeAnimation(
+                    1.1,
+                    Container(
+                        width: 280,
+                        height: 280,
+                        child: Lottie.asset(
+                          "assets/raw/splash.json",
+                          frameRate: FrameRate.max,
+                        ))),
+                FadeAnimation(
+                    1.3,
+                    Text(
+                      "Eduventure",
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
+                    ))
               ],
             )),
       ),

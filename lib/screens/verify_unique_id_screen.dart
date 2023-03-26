@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eduventure/animations/fade_animation.dart';
 import 'package:eduventure/screens/forgot_password_screen.dart';
 import 'package:eduventure/screens/register_screen.dart';
@@ -13,6 +14,46 @@ class VerifyUniqueIdScreen extends StatefulWidget {
 }
 
 class _VerifyUniqueIdScreenState extends State<VerifyUniqueIdScreen> {
+
+  TextEditingController _uniqueId = TextEditingController();
+  TextEditingController _phoneNo = TextEditingController();
+
+  bool _isLoading = false;
+
+  var _uniqueIdData  = {};
+
+
+  void checkUniqueId() async {
+    if(_uniqueId.text.isNotEmpty){
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        var uniqueIdSnap = await FirebaseFirestore.instance
+            .collection("UniqueId")
+            .doc(_uniqueId.text)
+            .get();
+        if(uniqueIdSnap.exists){
+          setState(() {
+             _uniqueIdData = uniqueIdSnap.data()!;
+            print(_uniqueIdData['phone']);
+          });
+
+        }else{
+
+        }
+        setState(() {});
+      } catch (e) {
+        showSnackBar(e.toString(), context);
+      }
+      setState(() {
+        _isLoading = false;
+      });
+    }else{
+
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +112,8 @@ class _VerifyUniqueIdScreenState extends State<VerifyUniqueIdScreen> {
                         FadeAnimation(
                             1.3,
                             TextFormField(
+                              keyboardType: TextInputType.number,
+                              controller: _uniqueId,
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.lock_clock),
                                 hintText: "Enter your Student Id",
@@ -87,10 +130,16 @@ class _VerifyUniqueIdScreenState extends State<VerifyUniqueIdScreen> {
                             child: FadeAnimation(
                                 1.4,
                                 ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      checkUniqueId();
+                                    },
                                     style: ElevatedButton.styleFrom(
                                         shape: StadiumBorder()),
-                                    child: Text("Verify".toUpperCase())))),
+                                    child: _isLoading ? CircularProgressIndicator(color: Colors.white,):
+                                    Text("Verify".toUpperCase())
+                                )
+                            )
+                        ),
                       ],
                     ),
                   )),
@@ -108,16 +157,17 @@ class _VerifyUniqueIdScreenState extends State<VerifyUniqueIdScreen> {
                           children: [
                             FadeAnimation(
                                 1.3,
-                                TextFormField(
-                                  readOnly: true,
-                                  enableInteractiveSelection: false,
-                                  decoration: InputDecoration(
-                                    prefixIcon:
-                                        Icon(Icons.phone_iphone_outlined),
-                                    hintText: "Phone No",
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(26)),
+                                Container(
+                                  width: double.infinity,
+                                  height: 52,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(26),
+                                    border: Border.all(color: Colors.grey)
+                                  ),
+                                  child: Center(
+                                    child: Text("${_uniqueIdData['phone']}",style: TextStyle(
+                                      fontWeight: FontWeight.bold,), textAlign: TextAlign.center
+                                      ,),
                                   ),
                                 )),
                             const SizedBox(
