@@ -50,10 +50,14 @@ Future<String> signUpUser({
       UserCredential cred = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
-      await _firestore.collection("users").add({
+
+      Map<String,dynamic> data = {
         "name": name,
         "uid": cred.user!.uid,
-        "email": email,
+        "email": email,  // Updating Document Reference
+      };
+      await _firestore.collection("users").doc(cred.user!.uid).set(data).whenComplete((){
+
       });
 
       res = "Success";
