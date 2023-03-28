@@ -1,5 +1,6 @@
 import 'package:eduventure/animations/fade_animation.dart';
 import 'package:eduventure/screens/classroom_screen.dart';
+import 'package:eduventure/screens/library_screen.dart';
 import 'package:eduventure/screens/login_screen.dart';
 import 'package:eduventure/screens/notice_screen.dart';
 import 'package:eduventure/utils/colors.dart';
@@ -164,7 +165,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 10,
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LibraryScreen()));
+                      },
                       child: FadeAnimation(
                         1.7,
                         Container(

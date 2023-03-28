@@ -68,6 +68,7 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
           'classCode' : timestamp,
           'className' : _className.text,  // Updating Document Reference
           'subjectName' : _subName.text,  // Updating Document Reference
+          'theme' : _selectTheme.text,  // Updating Document Reference
           'uid' : FirebaseAuth.instance.currentUser?.uid,  // Updating Document Reference
           'name' : userData['name'],  // Updating Document Reference
         };
@@ -94,7 +95,8 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
         Map<String,dynamic> data = {
           'classCode' : timestamp,
           'className' : _className.text,  // Updating Document Reference
-          'subjectName' : _subName.text,  // Updating Document Reference
+          'subjectName' : _subName.text,
+          'theme' : _selectTheme.text,// Updating Document Reference
           'uid' : FirebaseAuth.instance.currentUser?.uid,
           'name' : userData['name'],// Updating Document Reference
         };
@@ -114,7 +116,8 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
       appBar: AppBar(
         title: Text("Create Class"),
       ),
-      body: Container(
+      body:
+      Container(
         padding: EdgeInsets.all(26),
         margin: EdgeInsets.only(top: 100),
         child: Column(
@@ -167,12 +170,12 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
               1.3,
               TextField(
                 controller: _selectTheme,
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
                 autofocus: false,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.book_online),
-                  hintText: "selectTheme",
+                  hintText: "range  1 to 5",
                   fillColor: Colors.blue.shade100,
                   filled: true,
                   border: OutlineInputBorder(
@@ -194,7 +197,13 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
                   child:
                   ElevatedButton(
                       onPressed: () {
-                        createClass();
+                        if(_subName.text.isEmpty || _className.text.isEmpty ){
+                          showSnackBar("Please Fill all the fields!!!", context);
+                        }else if (int.parse(_selectTheme.text) >= 1 && int.parse(_selectTheme.text) < 6){
+                          createClass();
+                        }else{
+                          showSnackBar("Range Value 1 to 5", context);
+                        }
                       },
                       style: ElevatedButton.styleFrom(shape: StadiumBorder()),
                       child: _isLoading ? CircularProgressIndicator(color: Colors.white,) :

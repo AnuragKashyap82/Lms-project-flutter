@@ -68,6 +68,7 @@ class _JoinClassScreenState extends State<JoinClassScreen> {
         'classCode': _classCode.text,
         'className': userData['className'], // Updating Document Reference
         'subjectName': userData['subjectName'], // Updating Document Reference
+        'theme': userData['theme'], // Updating Document Reference
         'uid': userData['uid'], // Updating Document Reference
         'name': teacherNameData['name'], // Updating Document Reference
       };

@@ -14,7 +14,8 @@ class NoticeScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: FadeAnimation(1.1, NoticeCard()),
+        child: FadeAnimation(1.1, NoticeCard()
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

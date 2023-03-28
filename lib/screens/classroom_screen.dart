@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eduventure/animations/fade_animation.dart';
+import 'package:eduventure/screens/classroom_view_screen.dart';
 import 'package:eduventure/screens/create_class_screen.dart';
 import 'package:eduventure/screens/join_class_screen.dart';
 import 'package:eduventure/utils/colors.dart';
@@ -19,7 +20,8 @@ class ClassroomScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Classroom"),
       ),
-      body: StreamBuilder(
+      body:
+      StreamBuilder(
           stream: FirebaseFirestore.instance.collection("users").
             doc(FirebaseAuth.instance.currentUser?.uid).collection("classroom")
               .snapshots(),
@@ -32,17 +34,25 @@ class ClassroomScreen extends StatelessWidget {
             }
             return ListView.builder(
                 itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) => Container(
+                itemBuilder: (context, index) =>
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ClassroomViewScreen(
+                            snap: snapshot.data!.docs[index].data()
+                        )));
+                      },
+                      child: Container(
                   margin: EdgeInsets.symmetric(
-                      horizontal: width > webScreenSize ? width * 0.3 : 0,
-                      vertical: width > webScreenSize ? 15 : 0
+                        horizontal: width > webScreenSize ? width * 0.3 : 0,
+                        vertical: width > webScreenSize ? 15 : 0
                   ),
                   child: FadeAnimation(
-                    1.1, ClassroomCard(
-                      snap: snapshot.data!.docs[index].data(),
-                    ),
+                      1.1, ClassroomCard(
+                        snap: snapshot.data!.docs[index].data(),
+                      ),
                   ),
-                ));
+                ),
+                    ));
           }),
 
       floatingActionButton: SpeedDial(
