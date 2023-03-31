@@ -10,12 +10,38 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-class ClassroomScreen extends StatelessWidget {
+class ClassroomScreen extends StatefulWidget {
   const ClassroomScreen({Key? key}) : super(key: key);
 
   @override
+  State<ClassroomScreen> createState() => _ClassroomScreenState();
+}
+
+class _ClassroomScreenState extends State<ClassroomScreen> {
+  @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    double size = MediaQuery.of(context).size.width;
+    int _count = 2;
+
+    setState(() {
+      if(size < 400){
+        _count = 1;
+      }else if(size > 400 && size < 500){
+        _count = 1;
+      }else if(size > 500 && size < 600){
+        _count = 1;
+      }else if(size > 600 && size < 800){
+        _count = 2;
+      }else if(size > 800 && size < 1000){
+        _count = 3;
+      }else if(size > 1000 && size < 1200){
+        _count = 3;
+      }else if(size > 1200 && size < 1400){
+        _count = 4;
+      }else if(size > 1400 && size < 1600){
+        _count = 4;
+      }
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text("Classroom"),
@@ -32,7 +58,41 @@ class ClassroomScreen extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             }
-            return ListView.builder(
+            return
+
+              GridView.builder(
+                itemCount: snapshot.data!.docs.length,
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                primary: false,
+                gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: _count, mainAxisExtent:  186),
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (context) =>
+                        ClassroomViewScreen(
+                            snap: snapshot.data!.docs[index].data()
+                        )));
+                  },
+                    child: Container(
+                      child: FadeAnimation(
+                        1.1, ClassroomCard(
+                          snap: snapshot.data!.docs[index].data(),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+
+
+
+
+
+
+              ListView.builder(
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) =>
                     GestureDetector(
@@ -42,10 +102,6 @@ class ClassroomScreen extends StatelessWidget {
                         )));
                       },
                       child: Container(
-                  margin: EdgeInsets.symmetric(
-                        horizontal: width > webScreenSize ? width * 0.3 : 0,
-                        vertical: width > webScreenSize ? 15 : 0
-                  ),
                   child: FadeAnimation(
                       1.1, ClassroomCard(
                         snap: snapshot.data!.docs[index].data(),
@@ -54,7 +110,6 @@ class ClassroomScreen extends StatelessWidget {
                 ),
                     ));
           }),
-
       floatingActionButton: SpeedDial(
         direction: SpeedDialDirection.up,
         icon: Icons.add,
@@ -100,6 +155,7 @@ class ClassroomScreen extends StatelessWidget {
           //add more menu item children here
         ],
       ),
+
     );
   }
 }

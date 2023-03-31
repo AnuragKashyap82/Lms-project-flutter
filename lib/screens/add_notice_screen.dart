@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eduventure/animations/fade_animation.dart';
 import 'package:eduventure/resource/storage_methods.dart';
+import 'package:eduventure/utils/global_variables.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AddNoticeScreen extends StatefulWidget {
   const AddNoticeScreen({Key? key}) : super(key: key);
@@ -15,14 +19,106 @@ class AddNoticeScreen extends StatefulWidget {
 }
 
 class _AddNoticeScreenState extends State<AddNoticeScreen> {
+
+  TextEditingController _noticeTitle = TextEditingController();
+  TextEditingController _noticeNo = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _noticeNo.dispose();
+    _noticeNo.dispose();
+  }
+
   UploadTask? task;
   File? file;
+  String url = "";
+  bool _isUploading = false;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    // final fileName = file != null ? base64Decode(file!.path) : "No files Selected";
 
-    final Storage storage = Storage();
+    DateTime time = DateTime.now();
+    String timestamp = time.millisecondsSinceEpoch.toString();
+
+    String date = DateFormat("yyyy-MM-dd").format(DateTime.now());
+    String dateTime = date;
+    ;
+    String tDate = DateFormat("HH:mm").format(DateTime.now());
+    DocumentReference reference =  FirebaseFirestore.instance.collection("Notice").
+    doc(timestamp);
+
+    void uploadNotice() async {
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        Map<String,dynamic> data = {
+          'noticeTitle' : _noticeTitle.text,  // Updating Document Reference
+          'noticeNo' : _noticeNo.text,  // Updating Document Reference
+          'noticeId' : timestamp, // Updating Document Reference
+          'noticeUrl' : url, // Updating Document Reference
+          'dateTime' : dateTime, // Updating Document Reference
+          'uid' : FirebaseAuth.instance.currentUser?.uid, // Updating Document Reference
+        };
+        await reference.set(data).whenComplete((){
+          setState(() {
+            _isLoading = false;
+          });
+          Navigator.pop(context);
+        });
+
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+        showSnackBar(e.toString(), context);
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+
+    Future getPdfAndUpload() async {
+
+      final result = await FilePicker.platform.pickFiles(
+          allowMultiple: false,
+          type: FileType.custom,
+          allowedExtensions: ['pdf']);
+
+      if (result == null) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("No files Selected"),
+        ));
+        return null;
+      }
+      setState(() {
+        _isUploading = true;
+      });
+      final path = result.files.single.path!;
+
+      DateTime time = DateTime.now();
+      String timestamp = time.millisecondsSinceEpoch.toString();
+
+      File file = File(path);
+      try{
+        final  Reference storageReference = FirebaseStorage.instance.ref().child("Notice").child(timestamp);
+        UploadTask uploadTask = storageReference.putFile(file);
+         url = await (await uploadTask).ref.getDownloadURL();
+        showSnackBar(url, context);
+        setState(() {
+          _isUploading = false;
+        });
+      }on FirebaseException catch(e){
+        setState(() {
+          _isUploading = false;
+        });
+        print(e);
+        showSnackBar(e.toString(), context);
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -31,32 +127,16 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
           GestureDetector(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.attach_file),
+              child: _isUploading ? CircularProgressIndicator(color: Colors.white, ):Icon(Icons.attach_file),
             ),
-            onTap: () async {
-              final result = await FilePicker.platform.pickFiles(
-                allowMultiple: false,
-                type: FileType.custom,
-                allowedExtensions: ['png', 'jpg'],
-              );
-              if (result == null) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("No files Selected"),
-                ));
-                return null;
-              }
-              final path = result.files.single.path!;
-              final fileName = result.files.single.name;
-
-              print(path);
-              print(fileName);
-
-              storage.uploadFile(path, fileName).then((value) => print("Done"));
+            onTap: ()  {
+              getPdfAndUpload();
             },
           )
         ],
       ),
-      body: Container(
+      body:
+      Container(
         padding: EdgeInsets.all(26),
         margin: EdgeInsets.only(top: 100),
         child: Column(
@@ -64,6 +144,7 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
             FadeAnimation(
               1.1,
               TextField(
+                controller: _noticeTitle,
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
                 autofocus: false,
@@ -85,12 +166,13 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
             FadeAnimation(
               1.2,
               TextField(
-                keyboardType: TextInputType.text,
+                controller: _noticeNo,
+                keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
                 autofocus: false,
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.line_axis),
-                  hintText: "Notice Title",
+                  hintText: "Notice No",
                   fillColor: Colors.blue.shade100,
                   filled: true,
                   border: OutlineInputBorder(
@@ -110,9 +192,23 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
                   height: 46,
                   width: double.infinity,
                   child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if(url == ""){
+                          showSnackBar("Please Pick Pdf", context);
+                        }else{
+                          if(_noticeTitle.text.isEmpty){
+                            showSnackBar("Enter Notice Title", context);
+                          }else if(_noticeNo.text.isEmpty){
+                            showSnackBar("Enter Notice No", context);
+                          }else{
+                            uploadNotice();
+                          }
+                        }
+                      },
                       style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-                      child: Text("Upload Notice".toUpperCase())),
+                      child: _isLoading ? CircularProgressIndicator(color: Colors.white,) :
+                      Text("Upload Notice")
+                  ),
                 ),
               ),
             )
@@ -121,5 +217,4 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
       ),
     );
   }
-
 }

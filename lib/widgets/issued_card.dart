@@ -2,15 +2,15 @@ import 'package:eduventure/animations/fade_animation.dart';
 import 'package:eduventure/screens/book_view_screen.dart';
 import 'package:flutter/material.dart';
 
-class BooksCard extends StatefulWidget {
+class IssuedCard extends StatefulWidget {
   final snap;
-  const BooksCard({Key? key, required this.snap}) : super(key: key);
+  const IssuedCard({Key? key, required this.snap}) : super(key: key);
 
   @override
-  State<BooksCard> createState() => _BooksCardState();
+  State<IssuedCard> createState() => _IssuedCardState();
 }
 
-class _BooksCardState extends State<BooksCard> {
+class _IssuedCardState extends State<IssuedCard> {
   @override
   Widget build(BuildContext context) {
     return
@@ -21,7 +21,8 @@ class _BooksCardState extends State<BooksCard> {
           decoration: BoxDecoration(
               color: Colors.grey.shade300,
               borderRadius: BorderRadius.circular(12)),
-          child: Column(
+          child:
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
@@ -66,6 +67,16 @@ class _BooksCardState extends State<BooksCard> {
                         style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.end,
                       ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4, right: 4),
+                    child: FadeAnimation(
+                      1.7, Text(
+                      "Issued Date: ${widget.snap['issueDate']}",
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.end,
+                    ),
                     ),
                   ),
                 ],

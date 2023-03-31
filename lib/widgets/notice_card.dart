@@ -1,8 +1,12 @@
 import 'package:eduventure/animations/fade_animation.dart';
 import 'package:flutter/material.dart';
 
+import '../screens/notice_view_screen.dart';
+
 class NoticeCard extends StatefulWidget {
-  const NoticeCard({Key? key}) : super(key: key);
+  final snap;
+
+  const NoticeCard({Key? key, required this.snap}) : super(key: key);
 
   @override
   State<NoticeCard> createState() => _NoticeCardState();
@@ -12,35 +16,56 @@ class _NoticeCardState extends State<NoticeCard> {
   @override
   Widget build(BuildContext context) {
     return
-      FadeAnimation(
-        1.2, Container(
-        decoration: BoxDecoration(
-          color: Colors.blue.shade100,
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: FadeAnimation(
-          1.3, ListTile(
-            leading: FadeAnimation(1.4, Icon(Icons.school_rounded)),
-            title: FadeAnimation(
-              1.5, Text('Notice Title', style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.w700
-              ),),
-            ),
-            subtitle: FadeAnimation(
-              1.6, Text(
-                "Notice Subtitles",
-                style: TextStyle(color: Colors.grey, fontSize: 14),
-              ),
-            ),
-            trailing: FadeAnimation(
-              1.7, Text("26/03/23", style: TextStyle(
-                color: Colors.grey, fontSize: 14
-              ),),
-            ),
-            onTap: () {},
+      Padding(
+        padding: EdgeInsets.all(4),
+        child: Container(
+          padding: EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.blue.shade100,
+            borderRadius: BorderRadius.circular(25),
           ),
-        ),
-    ),
-      );
+          child: Row(
+            children: [
+              Icon(
+                Icons.school_rounded,
+                size: 36, color: Colors.blueGrey.shade400,
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.snap['noticeTitle'],
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                    SizedBox(
+                      height: 2,
+                    ),
+                    Text(
+                      widget.snap['noticeNo'],
+                      style: TextStyle(
+                          fontWeight: FontWeight.w100, fontSize: 12),
+                    ),
+                  ]),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      widget.snap['dateTime'],
+                      style:
+                          TextStyle(fontWeight: FontWeight.w100, fontSize: 12),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ));
   }
 }
