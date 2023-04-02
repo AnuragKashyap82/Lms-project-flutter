@@ -19,8 +19,9 @@ class _VerifyUniqueIdScreenState extends State<VerifyUniqueIdScreen> {
   TextEditingController _phoneNo = TextEditingController();
 
   bool _isLoading = false;
+  var _uniqueIdData  = {
 
-  var _uniqueIdData  = {};
+  };
 
 
   void checkUniqueId() async {

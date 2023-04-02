@@ -100,7 +100,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             TextFormField(
                               keyboardType: TextInputType.name,
                               textInputAction: TextInputAction.next,
-                              autofocus: true,
                               controller: _nameController,
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.person_outline_outlined),
