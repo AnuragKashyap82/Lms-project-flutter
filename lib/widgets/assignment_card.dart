@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eduventure/utils/colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/global_variables.dart';
 
 class AssignmentCard extends StatefulWidget {
   final snap;
@@ -10,6 +14,42 @@ class AssignmentCard extends StatefulWidget {
 }
 
 class _AssignmentCardState extends State<AssignmentCard> {
+
+  bool _alreadySubmitted = false;
+  bool _notSubmitted = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadIfSubmitted();
+  }
+
+  void loadIfSubmitted() async {
+    try {
+      var submittedSnap = await FirebaseFirestore.instance
+          .collection("classroom")
+          .doc(widget.snap['classCode'])
+          .collection("assignment")
+          .doc(widget.snap['assignmentId'])
+          .collection("submission")
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .get();
+      if (submittedSnap.exists) {
+        setState(() {
+          _alreadySubmitted = true;
+        });
+      } else {
+        setState(() {
+          _notSubmitted = true;
+        });
+      }
+
+    } catch (e) {
+      showSnackBar(e.toString(), context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,7 +63,9 @@ class _AssignmentCardState extends State<AssignmentCard> {
             SizedBox(
               width: 4,
             ),
-            Icon(Icons.assignment, color: colorPrimary,),
+            Icon(Icons.assignment, color: _alreadySubmitted ?  Colors.grey:
+            colorPrimary
+              ,),
             SizedBox(
               width: 12,
             ),

@@ -58,7 +58,8 @@ class _ClassPostMsgCardState extends State<ClassPostMsgCard> {
       }
     });
 
-    return Padding(
+    return
+      Padding(
       padding: const EdgeInsets.all(4),
       child: isLoading
           ? Container()

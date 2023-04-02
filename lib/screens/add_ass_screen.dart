@@ -20,7 +20,6 @@ class AddAssignmentScreen extends StatefulWidget {
 }
 
 class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
-
   TextEditingController _assNameController = TextEditingController();
   TextEditingController _fullMarksController = TextEditingController();
 
@@ -48,37 +47,45 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     DateTime time = DateTime.now();
     String timestamp = time.millisecondsSinceEpoch.toString();
 
     String date = DateFormat("yyyy-MM-dd").format(DateTime.now());
     String dateTime = date;
     String tDate = DateFormat("HH:mm").format(DateTime.now());
-    DocumentReference reference =  FirebaseFirestore.instance.collection("classroom").doc(widget.snap['classCode']).collection("assignment").
-    doc(timestamp);
+    DocumentReference reference = FirebaseFirestore.instance
+        .collection("classroom")
+        .doc(widget.snap['classCode'])
+        .collection("assignment")
+        .doc(timestamp);
 
     void uploadAss() async {
       setState(() {
         _isLoading = true;
       });
       try {
-        Map<String,dynamic> data = {
-          'assignmentId' : timestamp,  // Updating Document Reference
-          'assignmentName' : _assNameController.text,  // Updating Document Reference
-          'classCode' : widget.snap['classCode'], // Updating Document Reference
-          'dueDate' : pickedDate, // Updating Document Reference
-          'dateTime' : dateTime, // Updating Document Reference// Updating Document Reference
-          'uid' : FirebaseAuth.instance.currentUser?.uid, // Updating Document Reference
-          'url' : url,
+        Map<String, dynamic> data = {
+          'assignmentId': timestamp,
+          // Updating Document Reference
+          'assignmentName': _assNameController.text,
+          // Updating Document Reference
+          'classCode': widget.snap['classCode'],
+          // Updating Document Reference
+          'dueDate': pickedDate,
+          'fullMarks': _fullMarksController.text,
+          // Updating Document Reference
+          'dateTime': dateTime,
+          // Updating Document Reference// Updating Document Reference
+          'uid': FirebaseAuth.instance.currentUser?.uid,
+          // Updating Document Reference
+          'url': url,
         };
-        await reference.set(data).whenComplete((){
+        await reference.set(data).whenComplete(() {
           setState(() {
             _isLoading = false;
           });
           Navigator.pop(context);
         });
-
       } catch (e) {
         setState(() {
           _isLoading = false;
@@ -91,7 +98,6 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
     }
 
     Future getPdfAndUpload() async {
-
       final result = await FilePicker.platform.pickFiles(
           allowMultiple: false,
           type: FileType.custom,
@@ -112,15 +118,16 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
       String timestamp = time.millisecondsSinceEpoch.toString();
 
       File file = File(path);
-      try{
-        final  Reference storageReference = FirebaseStorage.instance.ref().child("Assignment").child(timestamp);
+      try {
+        final Reference storageReference =
+            FirebaseStorage.instance.ref().child("Assignment").child(timestamp);
         UploadTask uploadTask = storageReference.putFile(file);
         url = await (await uploadTask).ref.getDownloadURL();
         showSnackBar(url, context);
         setState(() {
           _isUploading = false;
         });
-      }on FirebaseException catch(e){
+      } on FirebaseException catch (e) {
         setState(() {
           _isUploading = false;
         });
@@ -131,14 +138,24 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: FadeAnimation(1.1, Text("Add Assignment",style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),)),
+        title: FadeAnimation(
+            1.1,
+            Text(
+              "Add Assignment",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            )),
         actions: [
           GestureDetector(
             child: Padding(
               padding: const EdgeInsets.all(8),
-              child: _isUploading ? Center(child: CircularProgressIndicator(color: Colors.white, )):Icon(Icons.picture_as_pdf_outlined),
+              child: _isUploading
+                  ? Center(
+                      child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ))
+                  : Icon(Icons.picture_as_pdf_outlined),
             ),
-            onTap: ()  {
+            onTap: () {
               getPdfAndUpload();
             },
           )
@@ -203,22 +220,25 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(26),
                       border: Border.all(color: Colors.blue.shade100),
-                    color: Colors.blue.shade100
-                  ),
+                      color: Colors.blue.shade100),
                   child: Center(
                     child: Row(
                       children: [
                         SizedBox(
                           width: 8,
                         ),
-                        Icon(Icons.calendar_month_outlined,),
+                        Icon(
+                          Icons.calendar_month_outlined,
+                        ),
                         SizedBox(
                           width: 8,
                         ),
                         Expanded(
-                          child: Text(pickedDate,style: TextStyle(
-                            fontWeight: FontWeight.bold), textAlign: TextAlign.start
-                            ,),
+                          child: Text(
+                            pickedDate,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.start,
+                          ),
                         ),
                       ],
                     ),
@@ -237,24 +257,26 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                       onPressed: () {
-                        if(url == ""){
+                        if (url == "") {
                           showSnackBar("Please Pick Pdf", context);
-                        }else{
-                          if(_assNameController.text.isEmpty){
+                        } else {
+                          if (_assNameController.text.isEmpty) {
                             showSnackBar("Enter Ass Name", context);
-                          }else if(_fullMarksController.text.isEmpty){
+                          } else if (_fullMarksController.text.isEmpty) {
                             showSnackBar("Enter Full Marks No", context);
-                          }else if(pickedDate == ""){
+                          } else if (pickedDate == "") {
                             showSnackBar("Enter Full Marks No", context);
-                          }else{
+                          } else {
                             uploadAss();
                           }
                         }
                       },
                       style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-                      child:  _isLoading ? CircularProgressIndicator(color: Colors.white,) :
-                      const Text('Upload')
-                  ),
+                      child: _isLoading
+                          ? CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : const Text('Upload')),
                 ),
               ),
             )
