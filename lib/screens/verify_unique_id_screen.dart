@@ -23,7 +23,6 @@ class _VerifyUniqueIdScreenState extends State<VerifyUniqueIdScreen> {
 
   };
 
-
   void checkUniqueId() async {
     if(_uniqueId.text.isNotEmpty){
       setState(() {
