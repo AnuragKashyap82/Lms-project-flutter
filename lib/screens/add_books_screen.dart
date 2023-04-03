@@ -218,26 +218,24 @@ class _AddBooksScreenState extends State<AddBooksScreen> {
               ),
               FadeAnimation(
                 1.6,
-                Expanded(
-                  child: Container(
-                    height: 46,
-                    width: double.infinity,
-                    child:
-                    ElevatedButton(
-                        onPressed: () {
-                          if (_subName.text.isNotEmpty && _bookName.text
-                              .isNotEmpty && _authorName.text.isNotEmpty &&
-                              _bookId.text.isNotEmpty &&
-                              _bookQty.text.isNotEmpty){
-                            uploadBook();
-                          }else{
-                            showSnackBar("Please fill all the fields!!!", context);
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-                        child: _isLoading ? CircularProgressIndicator(color: Colors.white,):
-                        Text("Upload Book".toUpperCase())
-                    ),
+                Container(
+                  height: 46,
+                  width: double.infinity,
+                  child:
+                  ElevatedButton(
+                      onPressed: () {
+                        if (_subName.text.isNotEmpty && _bookName.text
+                            .isNotEmpty && _authorName.text.isNotEmpty &&
+                            _bookId.text.isNotEmpty &&
+                            _bookQty.text.isNotEmpty){
+                          uploadBook();
+                        }else{
+                          showSnackBar("Please fill all the fields!!!", context);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(shape: StadiumBorder()),
+                      child: _isLoading ? CircularProgressIndicator(color: Colors.white,):
+                      Text("Upload Book".toUpperCase())
                   ),
                 ),
               )

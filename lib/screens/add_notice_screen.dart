@@ -120,99 +120,99 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
       }
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Add Notice"),
-        actions: [
-          GestureDetector(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _isUploading ? CircularProgressIndicator(color: Colors.white, ):Icon(Icons.attach_file),
-            ),
-            onTap: ()  {
-              getPdfAndUpload();
-            },
-          )
-        ],
-      ),
-      body:
-      Container(
-        padding: EdgeInsets.all(26),
-        margin: EdgeInsets.only(top: 100),
-        child: Column(
-          children: [
-            FadeAnimation(
-              1.1,
-              TextField(
-                controller: _noticeTitle,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                autofocus: false,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.line_axis),
-                  hintText: "Notice Title",
-                  filled: true,
-                  fillColor: Colors.blue.shade100,
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(26),
-                  ),
-                ),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Add Notice"),
+          actions: [
+            GestureDetector(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: _isUploading ? CircularProgressIndicator(color: Colors.white, ):Icon(Icons.attach_file),
               ),
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            FadeAnimation(
-              1.2,
-              TextField(
-                controller: _noticeNo,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                autofocus: false,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.line_axis),
-                  hintText: "Notice No",
-                  fillColor: Colors.blue.shade100,
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(26),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 40,
-            ),
-            FadeAnimation(
-              1.3,
-              Expanded(
-                child: Container(
-                  height: 46,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        if(url == ""){
-                          showSnackBar("Please Pick Pdf", context);
-                        }else{
-                          if(_noticeTitle.text.isEmpty){
-                            showSnackBar("Enter Notice Title", context);
-                          }else if(_noticeNo.text.isEmpty){
-                            showSnackBar("Enter Notice No", context);
-                          }else{
-                            uploadNotice();
-                          }
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-                      child: _isLoading ? CircularProgressIndicator(color: Colors.white,) :
-                      Text("Upload Notice")
-                  ),
-                ),
-              ),
+              onTap: ()  {
+                getPdfAndUpload();
+              },
             )
           ],
+        ),
+        body:
+        Container(
+          padding: EdgeInsets.all(26),
+          margin: EdgeInsets.only(top: 100),
+          child: SizedBox(
+            child:
+            Column(
+              children: [
+                FadeAnimation(
+                  1.1,
+                  TextField(
+                    controller: _noticeTitle,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.line_axis),
+                      hintText: "Notice Title",
+                      filled: true,
+                      fillColor: Colors.blue.shade100,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(26),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                FadeAnimation(
+                  1.2,
+                  TextField(
+                    controller: _noticeNo,
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.line_axis),
+                      hintText: "Notice No",
+                      fillColor: Colors.blue.shade100,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(26),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                FadeAnimation(
+                  1.3, Container(
+                    height: 46,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          if(url == ""){
+                            showSnackBar("Please Pick Pdf", context);
+                          }else{
+                            if(_noticeTitle.text.isEmpty){
+                              showSnackBar("Enter Notice Title", context);
+                            }else if(_noticeNo.text.isEmpty){
+                              showSnackBar("Enter Notice No", context);
+                            }else{
+                              uploadNotice();
+                            }
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(shape: StadiumBorder()),
+                        child: _isLoading ? CircularProgressIndicator(color: Colors.white,) :
+                        const Text("Upload Notice")
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );

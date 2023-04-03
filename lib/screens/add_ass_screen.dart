@@ -251,33 +251,31 @@ class _AddAssignmentScreenState extends State<AddAssignmentScreen> {
             ),
             FadeAnimation(
               1.4,
-              Expanded(
-                child: Container(
-                  height: 46,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        if (url == "") {
-                          showSnackBar("Please Pick Pdf", context);
+              Container(
+                height: 46,
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: () {
+                      if (url == "") {
+                        showSnackBar("Please Pick Pdf", context);
+                      } else {
+                        if (_assNameController.text.isEmpty) {
+                          showSnackBar("Enter Ass Name", context);
+                        } else if (_fullMarksController.text.isEmpty) {
+                          showSnackBar("Enter Full Marks No", context);
+                        } else if (pickedDate == "") {
+                          showSnackBar("Enter Full Marks No", context);
                         } else {
-                          if (_assNameController.text.isEmpty) {
-                            showSnackBar("Enter Ass Name", context);
-                          } else if (_fullMarksController.text.isEmpty) {
-                            showSnackBar("Enter Full Marks No", context);
-                          } else if (pickedDate == "") {
-                            showSnackBar("Enter Full Marks No", context);
-                          } else {
-                            uploadAss();
-                          }
+                          uploadAss();
                         }
-                      },
-                      style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-                      child: _isLoading
-                          ? CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                          : const Text('Upload')),
-                ),
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(shape: StadiumBorder()),
+                    child: _isLoading
+                        ? CircularProgressIndicator(
+                            color: Colors.white,
+                          )
+                        : const Text('Upload')),
               ),
             )
           ],

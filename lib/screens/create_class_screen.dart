@@ -190,25 +190,23 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
             ),
             FadeAnimation(
               1.4,
-              Expanded(
-                child: Container(
-                  height: 46,
-                  width: double.infinity,
-                  child:
-                  ElevatedButton(
-                      onPressed: () {
-                        if(_subName.text.isEmpty || _className.text.isEmpty ){
-                          showSnackBar("Please Fill all the fields!!!", context);
-                        }else if (int.parse(_selectTheme.text) >= 1 && int.parse(_selectTheme.text) < 6){
-                          createClass();
-                        }else{
-                          showSnackBar("Range Value 1 to 5", context);
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-                      child: _isLoading ? CircularProgressIndicator(color: Colors.white,) :
-                      Text("Create Class".toUpperCase())
-                  ),
+              Container(
+                height: 46,
+                width: double.infinity,
+                child:
+                ElevatedButton(
+                    onPressed: () {
+                      if(_subName.text.isEmpty || _className.text.isEmpty ){
+                        showSnackBar("Please Fill all the fields!!!", context);
+                      }else if (int.parse(_selectTheme.text) >= 1 && int.parse(_selectTheme.text) < 6){
+                        createClass();
+                      }else{
+                        showSnackBar("Range Value 1 to 5", context);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(shape: StadiumBorder()),
+                    child: _isLoading ? CircularProgressIndicator(color: Colors.white,) :
+                    Text("Create Class".toUpperCase())
                 ),
               ),
             )

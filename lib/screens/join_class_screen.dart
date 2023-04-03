@@ -176,18 +176,16 @@ class _JoinClassScreenState extends State<JoinClassScreen> {
             ),
             FadeAnimation(
               1.3,
-              Expanded(
-                child: Container(
-                  height: 46,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        checkIfClassExists();
-                      },
-                      style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-                      child: _isLoading ? CircularProgressIndicator(color: Colors.white,) :
-                      Text("Join Class".toUpperCase())
-                  ),
+              Container(
+                height: 46,
+                width: double.infinity,
+                child: ElevatedButton(
+                    onPressed: () {
+                      checkIfClassExists();
+                    },
+                    style: ElevatedButton.styleFrom(shape: StadiumBorder()),
+                    child: _isLoading ? CircularProgressIndicator(color: Colors.white,) :
+                    Text("Join Class".toUpperCase())
                 ),
               ),
             )
