@@ -1,3 +1,4 @@
+
 import 'package:eduventure/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -35,33 +36,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const SplashScreen(),
-    );
-  }
-}
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-  @override
-  Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar: AppBar(
-      ),
-      body: Center(
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          child: Center(child: Text("Anurag Kashyap", style: TextStyle(fontSize: 26, color: Colors.black, fontFamily: 'SegSemiBold'),)),
-        ),
-      ),
     );
   }
 }

@@ -33,16 +33,15 @@ class _AddBooksScreenState extends State<AddBooksScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     DateTime time = DateTime.now();
     String timestamp = time.millisecondsSinceEpoch.toString();
 
     String date = DateFormat("yyyy-MM-dd").format(DateTime.now());
     String tDate = DateFormat("HH:mm").format(DateTime.now());
-    String dateTime = date +"  "+ tDate;
+    String dateTime = date + "  " + tDate;
 
-    DocumentReference reference =  FirebaseFirestore.instance.collection("books").
+    DocumentReference reference = FirebaseFirestore.instance.collection("books")
+        .
     doc(timestamp);
 
     void uploadBook() async {
@@ -50,22 +49,21 @@ class _AddBooksScreenState extends State<AddBooksScreen> {
         _isLoading = true;
       });
       try {
-        Map<String,dynamic> data = {
-          'authorName' : _authorName.text,  // Updating Document Reference
-          'bookId' : _bookId.text,  // Updating Document Reference
-          'bookName' : _bookName.text,  // Updating Document Reference
-          'subjectName' : _subName.text,  // Updating Document Reference
-          'bookQty' : _bookQty.text,  // Updating Document Reference
-          'timestamp' : timestamp,  // Updating Document Reference
-          'dateTime' : dateTime,  // Updating Document Reference
+        Map<String, dynamic> data = {
+          'authorName': _authorName.text, // Updating Document Reference
+          'bookId': _bookId.text, // Updating Document Reference
+          'bookName': _bookName.text, // Updating Document Reference
+          'subjectName': _subName.text, // Updating Document Reference
+          'bookQty': _bookQty.text, // Updating Document Reference
+          'timestamp': timestamp, // Updating Document Reference
+          'dateTime': dateTime, // Updating Document Reference
         };
-        await reference.set(data).whenComplete((){
+        await reference.set(data).whenComplete(() {
           setState(() {
             _isLoading = false;
           });
           Navigator.pop(context);
         });
-
       } catch (e) {
         setState(() {
           _isLoading = false;
@@ -78,7 +76,8 @@ class _AddBooksScreenState extends State<AddBooksScreen> {
     }
 
 
-    return Scaffold(
+    return
+      Scaffold(
       appBar: AppBar(
         title: Text("Add books to library",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
@@ -227,14 +226,16 @@ class _AddBooksScreenState extends State<AddBooksScreen> {
                         if (_subName.text.isNotEmpty && _bookName.text
                             .isNotEmpty && _authorName.text.isNotEmpty &&
                             _bookId.text.isNotEmpty &&
-                            _bookQty.text.isNotEmpty){
+                            _bookQty.text.isNotEmpty) {
                           uploadBook();
-                        }else{
-                          showSnackBar("Please fill all the fields!!!", context);
+                        } else {
+                          showSnackBar(
+                              "Please fill all the fields!!!", context);
                         }
                       },
                       style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-                      child: _isLoading ? CircularProgressIndicator(color: Colors.white,):
+                      child: _isLoading ? CircularProgressIndicator(
+                        color: Colors.white,) :
                       Text("Upload Book".toUpperCase())
                   ),
                 ),
