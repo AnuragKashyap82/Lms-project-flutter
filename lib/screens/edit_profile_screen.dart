@@ -167,7 +167,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 FadeAnimation(
                   1.1,
                   Center(
-                    child: GestureDetector(
+                    child:
+                    GestureDetector(
                       onTap: selectImage,
                       child: _image != null
                           ? CircleAvatar(

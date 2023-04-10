@@ -83,7 +83,7 @@ class _ClassPostMsgCardState extends State<ClassPostMsgCard> {
                           CircleAvatar(
                             radius: 20,
                             backgroundImage: NetworkImage(
-                                'https://images.unsplash.com/photo-1679687189714-6a0e57adc199?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw1fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60'),
+                                userData["photoUrl"]),
                           ),
                         ),
                         SizedBox(

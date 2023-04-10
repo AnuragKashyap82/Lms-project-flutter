@@ -63,7 +63,7 @@ class _UserAppliedCardState extends State<UserAppliedCard> {
         child: FadeAnimation(
           1.3, ListTile(
           leading: FadeAnimation(1.4, CircleAvatar( radius: 26, backgroundImage: NetworkImage(
-              'https://images.unsplash.com/photo-1679687189714-6a0e57adc199?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw1fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60'))),
+              userData["photoUrl"]))),
           title: FadeAnimation(
             1.5, Text(userData['name'], style: TextStyle(
               fontSize: 12, fontWeight: FontWeight.w700
