@@ -55,6 +55,15 @@ Future<String> signUpUser({
         "name": name,
         "uid": cred.user!.uid,
         "email": email,  // Updating Document Reference
+        "photoUrl": "",
+        'phoneNo': "", // Updating Document Reference
+        'completeAddress':"", // Updating Document Reference
+        'dob': "", // Updating Document Reference
+        'regNo': "", // Updating Document Reference
+        'branch': "", // Updating Document Reference
+        'semester': "", // Updating Document Reference
+        'session': "", // Updating Document Reference
+        'seatType': "",// Updating Document Reference
       };
       await _firestore.collection("users").doc(cred.user!.uid).set(data).whenComplete((){
 
