@@ -51,9 +51,7 @@ class _ClassroomViewScreenState extends State<ClassroomViewScreen> {
                       itemBuilder: (context, index) =>
                           GestureDetector(
                             onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => ClassroomViewScreen(
-                                  snap: snapshot.data!.docs[index].data()
-                              )));
+
                             },
                             child: Container(
                               margin: EdgeInsets.symmetric(
