@@ -16,7 +16,6 @@ class UserAppliedCard extends StatefulWidget {
 class _UserAppliedCardState extends State<UserAppliedCard> {
   var userData = {};
   var isLoading = false;
-
   @override
   void initState() {
     // TODO: implement initState
@@ -26,7 +25,6 @@ class _UserAppliedCardState extends State<UserAppliedCard> {
       isLoading = true;
     });
   }
-
   getData() async {
     try {
       setState(() {
