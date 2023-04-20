@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:eduventure/animations/fade_animation.dart';
 import 'package:eduventure/screens/home_page.dart';
 import 'package:eduventure/screens/login_screen.dart';
+import 'package:eduventure/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -24,17 +24,13 @@ class _SplashScreenState extends State<SplashScreen> {
         setState(() {
           Timer(Duration(seconds: 3), () {
             Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>HomeScreen()));
+                context, MaterialPageRoute(builder: (context) => HomeScreen()));
           });
         });
-      }else{
+      } else {
         Timer(Duration(seconds: 3), () {
           Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>LoginScreen()));
+              context, MaterialPageRoute(builder: (context) => LoginScreen()));
         });
       }
     });
@@ -63,9 +59,10 @@ class _SplashScreenState extends State<SplashScreen> {
                     Container(
                         width: 280,
                         height: 280,
-                        child: Lottie.asset(
-                          "assets/raw/splash.json",
-                          frameRate: FrameRate.max,
+                        child: Icon(
+                          Icons.emoji_emotions_sharp,
+                          size: 160,
+                          color: colorPrimary,
                         ))),
                 FadeAnimation(
                     1.3,

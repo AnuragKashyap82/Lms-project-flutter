@@ -6,7 +6,8 @@ import 'package:eduventure/screens/register_screen.dart';
 import 'package:eduventure/screens/verify_unique_id_screen.dart';
 import 'package:eduventure/utils/global_variables.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
+
+import '../utils/colors.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -73,9 +74,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     Container(
                         width: 180,
                         height: 180,
-                        child: Lottie.asset(
-                          "assets/raw/login.json",
-                          frameRate: FrameRate.max,
+                        child: Icon(
+                          Icons.emoji_emotions_sharp,
+                          size: 160,
+                          color: colorPrimary,
                         )),
                   ),
                   FadeAnimation(

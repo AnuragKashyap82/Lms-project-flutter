@@ -4,7 +4,8 @@ import 'package:eduventure/screens/forgot_password_screen.dart';
 import 'package:eduventure/screens/register_screen.dart';
 import 'package:eduventure/utils/global_variables.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
+
+import '../utils/colors.dart';
 
 class VerifyUniqueIdScreen extends StatefulWidget {
   const VerifyUniqueIdScreen({Key? key}) : super(key: key);
@@ -84,9 +85,10 @@ class _VerifyUniqueIdScreenState extends State<VerifyUniqueIdScreen> {
                     Container(
                         width: 180,
                         height: 180,
-                        child: Lottie.asset(
-                          "assets/raw/login.json",
-                          frameRate: FrameRate.max,
+                        child: Icon(
+                          Icons.verified,
+                          size: 160,
+                          color: colorPrimary,
                         )),
                   ),
                   FadeAnimation(

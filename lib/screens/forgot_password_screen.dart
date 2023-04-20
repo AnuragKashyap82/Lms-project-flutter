@@ -2,7 +2,8 @@ import 'package:eduventure/animations/fade_animation.dart';
 import 'package:eduventure/screens/login_screen.dart';
 import 'package:eduventure/utils/global_variables.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
+
+import '../utils/colors.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
@@ -37,9 +38,10 @@ class ForgotPasswordScreen extends StatelessWidget {
                   1.0,Container(
                         width: 180,
                         height: 180,
-                        child: Lottie.asset(
-                          "assets/raw/forgot.json",
-                          frameRate: FrameRate.max,
+                        child: Icon(
+                          Icons.wifi_password_outlined,
+                          size: 160,
+                          color: colorPrimary,
                         ))),
                 FadeAnimation(
                   1.1,Text("Welcome",

@@ -4,7 +4,8 @@ import 'package:eduventure/screens/home_page.dart';
 import 'package:eduventure/screens/login_screen.dart';
 import 'package:eduventure/utils/global_variables.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
+
+import '../utils/colors.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -74,9 +75,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Container(
                           width: 180,
                           height: 180,
-                          child: Lottie.asset(
-                            "assets/raw/login.json",
-                            frameRate: FrameRate.max,
+                          child: Icon(
+                            Icons.emoji_emotions_sharp,
+                            size: 160,
+                            color: colorPrimary,
                           ))),
                   FadeAnimation(
                       1.2,

@@ -75,13 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.black
           ),
           backgroundColor: Colors.blue.shade100,
-          title: Text(
-            "Eduventure",
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
-          ),
         ),
       ),
       body: _isLoading ? Center(child: CircularProgressIndicator(color:  colorPrimary,))
