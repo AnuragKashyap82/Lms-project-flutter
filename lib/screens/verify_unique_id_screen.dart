@@ -3,6 +3,7 @@ import 'package:eduventure/animations/fade_animation.dart';
 import 'package:eduventure/screens/forgot_password_screen.dart';
 import 'package:eduventure/screens/register_screen.dart';
 import 'package:eduventure/utils/global_variables.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/colors.dart';
@@ -15,45 +16,86 @@ class VerifyUniqueIdScreen extends StatefulWidget {
 }
 
 class _VerifyUniqueIdScreenState extends State<VerifyUniqueIdScreen> {
-
+  FirebaseAuth auth = FirebaseAuth.instance;
   TextEditingController _uniqueId = TextEditingController();
-  TextEditingController _phoneNo = TextEditingController();
+  TextEditingController countryController = TextEditingController();
 
   bool _isLoading = false;
-  var _uniqueIdData  = {
 
-  };
+  bool _isCodeSent = false;
+  bool _isOtpVerified = false;
+  String btnText = "Send Otp";
+  String verify = "";
+  var phone = "";
+  var code = "";
+
+  var _uniqueIdData = {};
 
   void checkUniqueId() async {
+        try {
+          var uniqueIdSnap = await FirebaseFirestore.instance
+              .collection("UniqueId")
+              .doc(_uniqueId.text)
+              .get();
+          if (uniqueIdSnap.exists) {
+            setState(() {
+              _isLoading = false;
+              _uniqueIdData = uniqueIdSnap.data()!;
+              phone = _uniqueIdData['phone'];
+            });
+          } else {
+            setState(() {
+              _isLoading = false;
+            });
+            showSnackBar("No Student id Found", context);
+          }
+          setState(() {});
+        } catch (e) {
+          setState(() {
+            _isLoading = false;
+          });
+          showSnackBar(e.toString(), context);
+        }
+  }
+
+  void checkAlreadyRegUniqueId() async {
     if(_uniqueId.text.isNotEmpty){
       setState(() {
         _isLoading = true;
       });
       try {
         var uniqueIdSnap = await FirebaseFirestore.instance
-            .collection("UniqueId")
+            .collection("alreadyRegUniqueId")
             .doc(_uniqueId.text)
             .get();
-        if(uniqueIdSnap.exists){
+        if (uniqueIdSnap.exists) {
           setState(() {
-             _uniqueIdData = uniqueIdSnap.data()!;
-            print(_uniqueIdData['phone']);
+            _isLoading = false;
           });
+          showSnackBar("StudentId Already Registered!!!", context);
 
-        }else{
-
+        } else {
+          checkUniqueId();
         }
-        setState(() {});
       } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
         showSnackBar(e.toString(), context);
       }
+    }else{
       setState(() {
         _isLoading = false;
       });
-    }else{
-
+      showSnackBar("Enter UniqueId", context);
     }
+  }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    countryController.text = "+91";
+    super.initState();
   }
 
   @override
@@ -86,7 +128,7 @@ class _VerifyUniqueIdScreenState extends State<VerifyUniqueIdScreen> {
                         width: 180,
                         height: 180,
                         child: Icon(
-                          Icons.verified,
+                          Icons.verified_user_outlined,
                           size: 160,
                           color: colorPrimary,
                         )),
@@ -112,17 +154,18 @@ class _VerifyUniqueIdScreenState extends State<VerifyUniqueIdScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         FadeAnimation(
-                            1.3,
-                            TextFormField(
-                              keyboardType: TextInputType.number,
-                              controller: _uniqueId,
-                              decoration: InputDecoration(
-                                prefixIcon: Icon(Icons.lock_clock),
-                                hintText: "Enter your Student Id",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(26)),
-                              ),
-                            )),
+                          1.3,
+                          TextFormField(
+                            keyboardType: TextInputType.number,
+                            controller: _uniqueId,
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.lock_clock),
+                              hintText: "Enter your Student Id",
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(26)),
+                            ),
+                          ),
+                        ),
                         const SizedBox(
                           height: 10.0,
                         ),
@@ -133,15 +176,16 @@ class _VerifyUniqueIdScreenState extends State<VerifyUniqueIdScreen> {
                                 1.4,
                                 ElevatedButton(
                                     onPressed: () {
-                                      checkUniqueId();
+                                      checkAlreadyRegUniqueId();
                                     },
                                     style: ElevatedButton.styleFrom(
                                         shape: StadiumBorder()),
-                                    child: _isLoading ? CircularProgressIndicator(color: Colors.white,):
-                                    Text("Verify".toUpperCase())
-                                )
-                            )
-                        ),
+                                    child: _isLoading
+                                        ? CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2,
+                                          )
+                                        : Text("Verify".toUpperCase())))),
                       ],
                     ),
                   )),
@@ -159,20 +203,38 @@ class _VerifyUniqueIdScreenState extends State<VerifyUniqueIdScreen> {
                           children: [
                             FadeAnimation(
                                 1.3,
-                                Container(
-                                  width: double.infinity,
-                                  height: 52,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(26),
-                                    border: Border.all(color: Colors.grey)
-                                  ),
-                                  child: Center(
-                                    child: Text("${_uniqueIdData['phone']}",style: TextStyle(
-                                      fontWeight: FontWeight.bold,), textAlign: TextAlign.center
-                                      ,),
-                                  ),
-                                )
-                            ),
+                                _isCodeSent
+                                    ? TextFormField(
+                                        keyboardType: TextInputType.number,
+                                        onChanged: (value) {
+                                          code = value;
+                                        },
+                                        decoration: InputDecoration(
+                                          prefixIcon: Icon(Icons.phone_in_talk),
+                                          hintText: "Enter your Otp",
+                                          border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(26)),
+                                        ),
+                                      )
+                                    : Container(
+                                        width: double.infinity,
+                                        height: 52,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(26),
+                                            border:
+                                                Border.all(color: Colors.grey)),
+                                        child: Center(
+                                          child: Text(
+                                            "${_uniqueIdData['phone']}",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      )),
                             const SizedBox(
                               height: 10.0,
                             ),
@@ -182,16 +244,106 @@ class _VerifyUniqueIdScreenState extends State<VerifyUniqueIdScreen> {
                                 child: FadeAnimation(
                                     1.4,
                                     ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => RegisterScreen()));
+                                        onPressed: () async {
+                                          if (phone.length != 10) {
+                                            showSnackBar(
+                                                "Phone No. should contain 10 digits!!!",
+                                                context);
+                                          } else {
+                                            if (!_isCodeSent) {
+                                              setState(() {
+                                                _isLoading = true;
+                                              });
+                                              try {
+                                                await FirebaseAuth.instance
+                                                    .verifyPhoneNumber(
+                                                  phoneNumber:
+                                                      '${countryController.text + phone}',
+                                                  verificationCompleted:
+                                                      (PhoneAuthCredential
+                                                          credential) {},
+                                                  verificationFailed:
+                                                      (FirebaseAuthException
+                                                          e) {
+                                                    setState(() {
+                                                      _isLoading = false;
+                                                    });
+                                                  },
+                                                  codeSent: (String
+                                                          verificationId,
+                                                      int? resendToken) async {
+                                                    setState(() {
+                                                      _isLoading = false;
+                                                      _isCodeSent = true;
+                                                      verify = verificationId;
+                                                      btnText = "Verify Otp";
+                                                    });
+                                                    // Navigator.push(context, MaterialPageRoute(builder: (_)=>MyVerify()));
+                                                  },
+                                                  codeAutoRetrievalTimeout:
+                                                      (String
+                                                          verificationId) {},
+                                                );
+                                              } catch (e) {
+                                                setState(() {
+                                                  _isLoading = false;
+                                                });
+                                                showSnackBar(
+                                                    "Otp send failed!!!",
+                                                    context);
+                                              }
+                                            } else if (_isCodeSent) {
+                                              try {
+                                                setState(() {
+                                                  _isLoading = true;
+                                                });
+                                                PhoneAuthCredential credential =
+                                                    PhoneAuthProvider
+                                                        .credential(
+                                                            verificationId:
+                                                                verify,
+                                                            smsCode: code);
+
+                                                // Sign the user in (or link) with the credential
+                                                await auth
+                                                    .signInWithCredential(
+                                                        credential)
+                                                    .then((value) {
+                                                  setState(() {
+                                                    _isOtpVerified = true;
+                                                    _isLoading = false;
+                                                    auth.signOut();
+                                                    showSnackBar(
+                                                        "Otp Verified!!",
+                                                        context);
+
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (_) =>
+                                                                RegisterScreen(
+                                                                  phoneNo:
+                                                                      _uniqueIdData[
+                                                                          'phone'],
+                                                                  uniqueId:
+                                                                      _uniqueIdData[
+                                                                          'studentId'],
+                                                                )));
+                                                  });
+                                                });
+                                              } catch (e) {
+                                                showSnackBar(
+                                                    "Wrong Otp", context);
+                                                setState(() {
+                                                  _isLoading = false;
+                                                });
+                                              }
+                                            }
+                                          }
                                         },
                                         style: ElevatedButton.styleFrom(
                                             shape: StadiumBorder()),
-                                        child:
-                                            Text("send otp".toUpperCase())))),
+                                        child: Text(btnText)))),
                           ],
                         ),
                       )),
@@ -201,13 +353,7 @@ class _VerifyUniqueIdScreenState extends State<VerifyUniqueIdScreen> {
                       FadeAnimation(
                           2.0,
                           TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            VerifyUniqueIdScreen()));
-                              },
+                              onPressed: () {},
                               child: Text.rich(TextSpan(
                                   text:
                                       "In case you face any difficulty in verifying your student id. kindly contact us",

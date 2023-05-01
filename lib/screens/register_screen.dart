@@ -1,14 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eduventure/animations/fade_animation.dart';
 import 'package:eduventure/resource/auth_methods.dart';
 import 'package:eduventure/screens/home_page.dart';
 import 'package:eduventure/screens/login_screen.dart';
+import 'package:eduventure/screens/verify_email_screen.dart';
 import 'package:eduventure/utils/global_variables.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../utils/colors.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  final String phoneNo;
+  final String uniqueId;
+  const RegisterScreen({Key? key, required this.phoneNo, required this.uniqueId}) : super(key: key);
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -19,6 +25,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _cPasswordController = TextEditingController();
+
+
 
   bool _isPasswordVisible = true;
   bool _isLoading = false;
@@ -32,26 +40,64 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _passwordController.dispose();
     _cPasswordController.dispose();
   }
+  void sendVerificationEmail() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user!= null && !user.emailVerified) {
+      await user.sendEmailVerification();
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => VerifyEmailScreen()));
+    }
+
+  }
+
+  void registerAlreadyUniqueId() async {
+    String date = DateFormat("yyyy-MM-dd").format(DateTime.now());
+    String tDate = DateFormat("HH:mm").format(DateTime.now());
+    try {
+      Map<String,dynamic> data = {
+        "name" : _nameController.text,
+        "email" : _emailController.text,
+        "uniqueId" : widget.uniqueId,
+        "dateTime" : "$date  $tDate",
+        'uid' : FirebaseAuth.instance.currentUser?.uid, // Updating Document Reference
+      };
+      DocumentReference reference =  FirebaseFirestore.instance.collection("alreadyRegUniqueId").
+      doc(widget.uniqueId);
+      await reference.set(data).whenComplete((){
+        sendVerificationEmail();
+        
+      });
+
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      showSnackBar(e.toString(), context);
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   void signUpUser() async {
     setState(() {
       _isLoading = true;
     });
-    String res = await AuthMethods().signUpUser(
+    await AuthMethods().signUpUser(
         email: _emailController.text,
         password: _passwordController.text,
+        phoneNo: widget.phoneNo,
+        studentId: widget.uniqueId,
         name: _nameController.text,
-        cPassword: _cPasswordController.text);
-
-    setState(() {
-      _isLoading = false;
+        cPassword: _cPasswordController.text).then((value) {
+      if (value != 'Success') {
+        showSnackBar(value, context);
+      } else {
+        registerAlreadyUniqueId();
+      }
     });
 
-    if (res != 'Success') {
-      showSnackBar(res, context);
-    } else {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
-    }
+
   }
 
   @override
@@ -189,7 +235,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     },
                                     style: ElevatedButton.styleFrom(
                                         shape: StadiumBorder()),
-                                    child: _isLoading ? CircularProgressIndicator(color: Colors.white,)
+                                    child: _isLoading ? CircularProgressIndicator(color: Colors.white, strokeWidth: 2,)
                                         : Text("Sign Up".toUpperCase())
                                 ))),
                       ],

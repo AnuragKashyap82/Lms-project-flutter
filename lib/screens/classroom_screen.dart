@@ -44,7 +44,7 @@ class _ClassroomScreenState extends State<ClassroomScreen> {
     });
     return Scaffold(
       appBar: AppBar(
-        title: Text("Classroom"),
+        title: Text("Classroom", style: TextStyle(fontSize: 16),),
       ),
       body:
       StreamBuilder(
@@ -55,11 +55,10 @@ class _ClassroomScreenState extends State<ClassroomScreen> {
               AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(strokeWidth: 2,),
               );
             }
             return
-
               GridView.builder(
                 itemCount: snapshot.data!.docs.length,
                 scrollDirection: Axis.vertical,
@@ -86,30 +85,8 @@ class _ClassroomScreenState extends State<ClassroomScreen> {
                   );
                 },
               );
-
-
-
-
-
-
-              ListView.builder(
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) =>
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ClassroomViewScreen(
-                            snap: snapshot.data!.docs[index].data()
-                        )));
-                      },
-                      child: Container(
-                  child: FadeAnimation(
-                      1.1, ClassroomCard(
-                        snap: snapshot.data!.docs[index].data(),
-                      ),
-                  ),
-                ),
-                    ));
           }),
+
       floatingActionButton: SpeedDial(
         direction: SpeedDialDirection.up,
         icon: Icons.add,

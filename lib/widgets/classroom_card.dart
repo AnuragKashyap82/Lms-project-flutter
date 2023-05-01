@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eduventure/animations/fade_animation.dart';
 import 'package:eduventure/utils/global_variables.dart';
@@ -43,6 +45,9 @@ class _ClassroomCardState extends State<ClassroomCard> {
 
   @override
   Widget build(BuildContext context) {
+
+    log("Clkassroom");
+
     setState(() {
       if (widget.snap['uid'] == FirebaseAuth.instance.currentUser?.uid) {
         _isTeacher = true;

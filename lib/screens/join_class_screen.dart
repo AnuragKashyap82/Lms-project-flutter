@@ -50,6 +50,36 @@ class _JoinClassScreenState extends State<JoinClassScreen> {
     teacherNameData = nameSnap.data()!;
     joinClass();
   }
+  void join() async {
+    setState(() {
+      _isLoading = true;
+    });
+    DocumentReference reference = FirebaseFirestore.instance
+        .collection("classroom")
+        .doc(_classCode.text)
+    .collection("students")
+    .doc(FirebaseAuth.instance.currentUser?.uid);
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      Map<String, dynamic> data = {
+        'uid': FirebaseAuth.instance.currentUser?.uid, // Updating Document Reference
+      };
+      await reference.set(data).whenComplete(() {
+        join();
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.pop(context);
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      showSnackBar(e.toString(), context);
+    }
+  }
 
   void joinClass() async {
     setState(() {
@@ -73,10 +103,8 @@ class _JoinClassScreenState extends State<JoinClassScreen> {
         'name': teacherNameData['name'], // Updating Document Reference
       };
       await reference.set(data).whenComplete(() {
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.pop(context);
+       join();
+
       });
     } catch (e) {
       setState(() {
@@ -184,7 +212,7 @@ class _JoinClassScreenState extends State<JoinClassScreen> {
                       checkIfClassExists();
                     },
                     style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-                    child: _isLoading ? CircularProgressIndicator(color: Colors.white,) :
+                    child: _isLoading ? CircularProgressIndicator(color: Colors.white, strokeWidth: 2,) :
                     Text("Join Class".toUpperCase())
                 ),
               ),

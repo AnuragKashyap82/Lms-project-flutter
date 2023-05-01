@@ -123,7 +123,7 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Add Notice"),
+          title: Text("Add Notice",style: TextStyle(fontSize: 16),),
           actions: [
             GestureDetector(
               child: Padding(

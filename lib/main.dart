@@ -1,5 +1,6 @@
 
 import 'package:eduventure/screens/splash_screen.dart';
+import 'package:eduventure/utils/custom_scrool_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,8 @@ class MyApp extends StatelessWidget {
         fontFamily: "SegSemiBold",
         primarySwatch: Colors.blue,
       ),
-      home: const SplashScreen(),
+      scrollBehavior: MyCustomScrollBehavior(),
+      home:  SplashScreen(),
 
     );
   }

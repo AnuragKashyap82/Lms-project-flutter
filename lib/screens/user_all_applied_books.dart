@@ -158,7 +158,8 @@ class _UserAllAppliedBooksScreenState extends State<UserAllAppliedBooksScreen> {
                                 context: context,
                                 barrierDismissible: false,
                                 builder: (context) {
-                                  return AlertDialog(
+                                  return
+                                    AlertDialog(
                                     backgroundColor: Colors.white,
                                     alignment: Alignment(0.0, 0.0),
                                     shape: RoundedRectangleBorder(

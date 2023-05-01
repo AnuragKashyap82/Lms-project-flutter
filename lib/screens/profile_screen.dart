@@ -116,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: Colors.black,
                                 ))),
                         FadeAnimation(1.3, Text(_userData["email"])),
-                        FadeAnimation(1.4, Text(_userData["regNo"])),
+                        FadeAnimation(1.4, Text(_userData["studentId"])),
                         FadeAnimation(1.5, Text(_userData["phoneNo"])),
                         SizedBox(
                           height: 8,

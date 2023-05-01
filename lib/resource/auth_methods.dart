@@ -39,6 +39,8 @@ Future<String> signUpUser({
   required String email,
   required String password,
   required String cPassword,
+  required String phoneNo,
+  required String studentId,
   required String name,
 }) async {
   String res = "Some Error Occured";
@@ -55,8 +57,9 @@ Future<String> signUpUser({
         "name": name,
         "uid": cred.user!.uid,
         "email": email,  // Updating Document Reference
-        "photoUrl": "",
-        'phoneNo': "", // Updating Document Reference
+        "phoneNo": phoneNo,  // Updating Document Reference
+        "studentId": studentId,  // Updating Document Reference
+        "photoUrl": "", // Updating Document Reference
         'completeAddress':"", // Updating Document Reference
         'dob': "", // Updating Document Reference
         'regNo': "", // Updating Document Reference

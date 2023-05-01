@@ -14,7 +14,7 @@ class NoticeScreen extends StatelessWidget {
     return
       Scaffold(
       appBar: AppBar(
-        title: Text("Notice Section"),
+        title: Text("Notice Section",style: TextStyle(fontSize: 16),),
       ),
       body:
       StreamBuilder(

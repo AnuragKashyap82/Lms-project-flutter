@@ -205,7 +205,7 @@ class _CreateClassScreenState extends State<CreateClassScreen> {
                       }
                     },
                     style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-                    child: _isLoading ? CircularProgressIndicator(color: Colors.white,) :
+                    child: _isLoading ? CircularProgressIndicator(color: Colors.white, strokeWidth: 2,) :
                     Text("Create Class".toUpperCase())
                 ),
               ),

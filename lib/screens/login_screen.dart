@@ -3,8 +3,10 @@ import 'package:eduventure/resource/auth_methods.dart';
 import 'package:eduventure/screens/forgot_password_screen.dart';
 import 'package:eduventure/screens/home_page.dart';
 import 'package:eduventure/screens/register_screen.dart';
+import 'package:eduventure/screens/verify_email_screen.dart';
 import 'package:eduventure/screens/verify_unique_id_screen.dart';
 import 'package:eduventure/utils/global_variables.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/colors.dart';
@@ -18,6 +20,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = true;
@@ -39,10 +42,19 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text.toString(),
         password: _passwordController.text.toString());
     if (res == "Success") {
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomeScreen()));
+      if(firebaseAuth.currentUser!.emailVerified){
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomeScreen()));
+      }else{
+        setState(() {
+          _isLoading = false;
+        });
+        showSnackBar("Email id not Verifiefd!!", context);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> VerifyEmailScreen()));
+      }
+
     } else {
       setState(() {
         _isLoading = false;
@@ -329,7 +341,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     },
                                     style: ElevatedButton.styleFrom(
                                         shape: StadiumBorder()),
-                                    child: _isLoading ? CircularProgressIndicator(color: Colors.white,)
+                                    child: _isLoading ? CircularProgressIndicator(color: Colors.white, strokeWidth: 2,)
                                         : Text("Login".toUpperCase())
                                 )
                             )

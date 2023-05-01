@@ -99,8 +99,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       try {
         Map<String, dynamic> data = {
           'name': _name.text, // Updating Document Reference
-          'email': _email.text, // Updating Document Reference
-          'phoneNo': _phoneNo.text, // Updating Document Reference
+          'email': _email.text, // Updating Document Reference// Updating Document Reference
           'completeAddress': _completeAddress.text, // Updating Document Reference
           'dob': _dob.text, // Updating Document Reference
           'regNo': _regNo.text, // Updating Document Reference
@@ -186,7 +185,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 FadeAnimation(1.2, ProfileWidget(heading: "Name", name: _name, enabled: true,)),
                 FadeAnimation(1.3, ProfileWidget(heading: "Email", name: _email, enabled: false,)),
-                FadeAnimation(1.4, ProfileWidget(heading: "Phone", name: _phoneNo, enabled: true,)),
+                FadeAnimation(1.4, ProfileWidget(heading: "Phone", name: _phoneNo, enabled: false,)),
                 FadeAnimation(1.5, ProfileWidget(heading: "Complete Address", name: _completeAddress, enabled: true,)),
                 FadeAnimation(1.6, ProfileWidget(heading: "DOB", name: _dob, enabled: true,)),
                 FadeAnimation(1.7, ProfileWidget(heading: "Registration No", name: _regNo, enabled: true,)),
